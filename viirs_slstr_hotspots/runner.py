@@ -3,14 +3,21 @@ from .quality_report import QualityReport
 from pathlib import Path
 
 
+# Объект для runner.
+# Хранит в себе всю необходимую информацию о шаге:
+# название, функцию (нам нужные функции run в скриптах
+# из папки pipline), им
 class Step:
     def __init__(self, name, func, inputs, outputs):
-        self.name = name
-        self.func = func
-        self.inputs = inputs
-        self.outputs = outputs
+        self.name = name # имя шага
+        self.func = func # вызываемая функция (нам нужны функции run в скриптах из pipline/
+        self.inputs = inputs # имена файлов .json, которые необходимы на этом шаге
+        self.outputs = outputs # имена файлов .json, которые должны создаться на шаге
 
 
+# оркестратор
+# На вход идёт конфиг (по умолчанию config/default.yaml)
+# и путь к папке для записи файлов run_dir (к примеру, runs/demo)
 class Runner:
     def __init__(self, cfg, run_dir: Path):
         self.steps = []
@@ -23,6 +30,7 @@ class Runner:
         self.quality = QualityReport(run_dir / "quality_report.json")
 
 
+    # добавить один шаг
     def register(self, name, func, inputs, outputs):
         step = Step(name, func, inputs, outputs)
         self.steps.append(step)
@@ -48,8 +56,12 @@ class Runner:
         if not result.get("ok"):
             raise RuntimeError(f"Шаг {step.name} вернул ok=False")
 
-
+    # пройтись по всем шагам.
     def run(self, force=False):
+        """
+        force - если True, пропускает шаг, все файлы которого уже записаны,
+        иначе перезаписывает.
+        """
         for step in self.steps:
             if not force and self._is_built(step.outputs):
                 continue
@@ -59,6 +71,8 @@ class Runner:
         self.quality.flush()
         self.journal.close()
 
+
+    # выполняет и перезаписывает один шаг
     def run_step(self, step_name):
         step = next((s for s in self.steps if s.name == step_name), None)
 
