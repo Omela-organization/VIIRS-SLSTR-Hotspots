@@ -1,0 +1,132 @@
+# viirs_slstr_hotspots — конфигурация по умолчанию
+# Значения взяты из приложения Б, группа 3 ТЗ.
+
+
+# Параметры алгоритма решения
+algorithm:
+  # Допустимое среднее число ложных тревог на 100 тыс. км² за пролёт
+  eps0: 1.0
+
+  # Доли eps0 между тремя тестами: пиксельный, кластерный, многопролётный
+  test_shares:
+    pixel: 0.333
+    cluster: 0.333
+    multi: 0.334
+
+  # Допустимая относительная ошибка оценки шума
+  sigma_rel: 0.2
+
+  # Во сколько раз порог сита мягче окончательного
+  sieve_multiplier: 100
+
+  # Минимальное число точек хвоста для подбора ОРП
+  min_tail_points: 100
+
+  # Уровень доверия для верхней границы формы хвоста xi
+  tail_confidence: 0.95
+
+  # Границы страт по зенитному углу Солнца: сумерки между ними (градусы)
+  twilight_bounds_deg: [84.0, 96.0]
+
+  # Доля энергии очага для радиуса защитного кольца из PSF
+  psf_energy_frac: 0.01
+
+  # Предел надёжности робастных оценок: доля кандидатов в окне,
+  # при которой ставится crowded_window
+  crowded_window_frac: 0.25
+
+  # Порог двугорбости гистограммы NDSI для снега
+  ndsi_bimodal_ratio: 0.5
+
+  # Максимальный размер окна фона
+  max_window_viirs_i: 31
+  max_window_slstr: 21
+  max_window_viirs_m: 21
+
+
+# Многолетний фон и история
+history:
+  # Сводная статистика: число корзин и диапазон остатков (K)
+  n_bins: 32
+  residual_range_k: 10.0
+  n_months: 12
+
+  # Сумма счётчиков, при которой включается старение (деление пополам)
+  n_max_per_cell: 200
+
+  # Минимальное число наблюдений для медианы сезонного окна
+  n_min_season: 40
+
+
+# Хранение и сроки (в сутках, кроме кэша в ГБ)
+storage:
+  l1b_retention_days: 7
+  tensor_x_retention_days: 30
+  tensor_d_retention_days: 730
+  passport_retention_days: 90
+  kriging_cache_gb: 20
+
+
+# Вычисления
+compute:
+  # Число процессов обработки пролётов: "auto" = min(ядра, память/8 ГБ)
+  n_processes: "auto"
+
+  # Период опроса каталогов фоновой службой (минуты)
+  catalog_poll_minutes: 10
+
+  # Подвыборка для начального приближения регрессии
+  regression_subsample: 64
+
+  # Критерий сходимости IRLS
+  irls_tol: 0.01
+  irls_max_iter: 10
+
+  # Число испытаний Монте-Карло для распределения eta
+  monte_carlo_trials: 100000
+
+  # Стартовое окно подтверждения при холодном старте (сутки)
+  warmup_window_days: 1
+
+  # Фиксированная плитка кригинга (ячейки)
+  kriging_tile: 256
+
+  # Блок хранения Zarr для промежуточных массивов пролёта
+  zarr_block: [1, 512, 512]
+
+
+# Вывод и выдача
+output:
+  # Шаг выдачи по умолчанию (ISO 8601 duration)
+  default_step: "P1D"
+
+  # Поведение при необработанном периоде: "nan" | "process"
+  on_missing: "nan"
+
+  # Таблица Планка: диапазон и шаг обратного пересчёта (K)
+  planck_t_min: 150.0
+  planck_t_max: 2500.0
+  planck_t_step: 0.1
+
+  # Рабочая и эталонная сетки (метры)
+  working_grid_m: 375
+  reference_grid_m: 240
+
+
+# Критерии приёмки
+acceptance:
+  p2_qq_tolerance: 0.1
+  p5_new_confirmed_frac: 0.85
+  p6_detected_frac: 0.70
+  p7_burn_match_frac: 0.80
+  p8_flare_class_frac: 0.90
+
+
+# Параметры развёртывания.
+# Реальные значения задаются в config/deployment.yaml.
+deployment:
+  data_root: null
+  reference_grid_file: null
+  working_projection: null
+  processing_aoi: null
+  platforms: null
