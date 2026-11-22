@@ -26,7 +26,7 @@ class Runner:
         self.run_dir = run_dir
         self.run_dir.mkdir(parents=True, exist_ok=True)
 
-        self.journal = PixelJournal(run_dir / "pixel_journal.sqlite")
+        self.journal = PixelJournal(run_dir / "pixel_journal.sqlite") # здесь будет бд
         self.quality = QualityReport(run_dir / "quality_report.json")
 
 
