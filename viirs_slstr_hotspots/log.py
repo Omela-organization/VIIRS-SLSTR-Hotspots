@@ -1,6 +1,7 @@
 """JSON-логирование через structlog (НФТ-08)."""
 import logging
 import sys
+
 import structlog
 
 

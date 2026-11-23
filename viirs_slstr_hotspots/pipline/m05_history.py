@@ -1,4 +1,3 @@
-from pathlib import Path
 
 
 def run(cfg, inputs, outputs, journal, quality):

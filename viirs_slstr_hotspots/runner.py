@@ -1,6 +1,7 @@
+from pathlib import Path
+
 from .pixel_journal import PixelJournal
 from .quality_report import QualityReport
-from pathlib import Path
 
 
 # Объект для runner.
