@@ -21,7 +21,7 @@ class Step:
 # и путь к папке для записи файлов run_dir (к примеру, runs/demo)
 class Runner:
     def __init__(self, cfg, run_dir: Path):
-        self.steps = []
+        self.steps: list[Step] = []
 
         self.cfg = cfg
         self.run_dir = run_dir
