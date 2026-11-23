@@ -15,8 +15,9 @@ env/
 .env.local
 *.env
 
-runs/
-data/
+runs/*
+runs/demo/*
+data/*
 cache/
 logs/
 *.log
