@@ -17,7 +17,20 @@ env/
 
 runs/*
 runs/demo/*
-data/*
+
+data/
+*.nc
+*.tif
+*.h5
+*.parquet
+
+# НО не игнорируем код кригинга
+!external/omelagrid_kriging/
+
+!data/**/.gitkeep
+
+
+
 cache/
 logs/
 *.log
